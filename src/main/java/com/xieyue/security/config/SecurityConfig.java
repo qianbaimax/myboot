@@ -1,5 +1,6 @@
 package com.xieyue.security.config;
 
+import com.xieyue.security.filter.JwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @author longchen
@@ -22,6 +24,9 @@ public class SecurityConfig {
 
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
+
+    @Autowired
+    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,6 +49,9 @@ public class SecurityConfig {
                 .csrf().disable()
                 // 不通过Session获取SecurityContext
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
 //                .and()
 ////                .authorizeRequests(authorize ->authorize.anyRequest().authenticated())
