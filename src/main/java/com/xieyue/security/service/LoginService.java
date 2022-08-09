@@ -9,4 +9,6 @@ import com.xieyue.security.domain.User;
  */
 public interface LoginService {
     ResponseResult login(User user);
+
+    ResponseResult logout();
 }
